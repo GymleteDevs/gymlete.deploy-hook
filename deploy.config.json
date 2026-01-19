@@ -1,9 +1,14 @@
 {
     "repos": {
         "hackathon-api": {
-            "secret": "secret1",
-            "path": "/repos/hackathon",
-            "cmd": "git pull && docker compose restart app"
+            "secret": "gymlete-docker",
+            "path": "/repos/gymlete.api.hackathon",
+            "cmd": "git pull && bun install && docker compose restart app"
+        },
+        "deploy-hook": {
+            "secret": "deploy-secret",
+            "path": "/gymlete-docker/gymlete.deploy-hook",
+            "cmd": "git pull && bun install && docker compose build deploy-hook && docker compose up -d deploy-hook"
         }
     }
 }
