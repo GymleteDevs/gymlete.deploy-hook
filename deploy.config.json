@@ -1,0 +1,9 @@
+{
+    "repos": {
+        "hackathon-api": {
+            "secret": "secret1",
+            "path": "/repos/hackathon",
+            "cmd": "git pull && docker compose restart app"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+services:
+  deploy-hook:
+    build: .
+    container_name: deploy-hook
+    restart: unless-stopped
+    ports:
+      - "6061:6061"
+    volumes:
+      - /srv:/repos
+      - /var/run/docker.sock:/var/run/docker.sock
