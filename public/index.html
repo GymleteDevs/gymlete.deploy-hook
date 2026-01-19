@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Deploy Status</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #0f1220;
+        --panel: #151936;
+        --text: #e6e8ff;
+        --muted: #9aa0ff;
+        --ok: #3ddc97;
+        --err: #ff6b6b;
+        --border: #2a2f6a;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        font-size: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--panel);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+
+      th {
+        text-align: left;
+        font-weight: 600;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .ok {
+        color: var(--ok);
+        font-weight: 600;
+      }
+
+      .err {
+        color: var(--err);
+        font-weight: 600;
+      }
+
+      .mono {
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Deploy Status</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Repo</th>
+          <th>Last attempt</th>
+          <th>Last success</th>
+          <th>Exit</th>
+          <th>Duration</th>
+          <th>Error</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+
+    <script>
+      async function load() {
+        const res = await fetch("/status.json");
+        const data = await res.json();
+        const tbody = document.getElementById("rows");
+
+        tbody.innerHTML = Object.entries(data)
+          .map(
+            ([id, s]) => `
+          <tr>
+            <td class="mono">${id}</td>
+            <td class="mono">${s.lastAttempt ?? "-"}</td>
+            <td class="mono">${s.lastSuccess ?? "-"}</td>
+            <td class="${s.lastExitCode === 0 ? "ok" : "err"} mono">
+              ${s.lastExitCode ?? "-"}
+            </td>
+            <td class="mono">${s.lastDurationMs ?? "-"} ms</td>
+            <td>${s.lastError ?? "-"}</td>
+          </tr>
+        `
+          )
+          .join("");
+      }
+
+      load();
+    </script>
+  </body>
+</html>
