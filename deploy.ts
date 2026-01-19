@@ -33,7 +33,7 @@ function verifyGitHubSignature(signature: string | null, body: string, secret: s
 }
 
 serve({
-  port: 6061,
+  port: 9061,
 
   async fetch(req) {
     const url = new URL(req.url);
