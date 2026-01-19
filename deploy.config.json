@@ -3,7 +3,7 @@
         "hackathon-api": {
             "secret": "YGnFFhbiaPQXnl1FvmyJl3rAwiaPi3s+dBcQMkV+y9lwe7yEoz013Mr3RDWV0qbm",
             "path": "/home/ubuntu/gymlete-docker/gymlete.api.hackathon",
-            "cmd": "git pull && bun install && docker compose down && docker compose build && docker compose up -d"
+            "cmd": "git pull && bun install && docker compose down && docker compose build --no-cache --pull && docker compose up -d --force-recreate"
         },
         "deploy-hook": {
             "secret": "F1JWRRx0vNhfvMqdniigjkJ2SeUBC2FEtwuzkQFG/56JjFaRLQUTeX4kMYUC7bNk",
