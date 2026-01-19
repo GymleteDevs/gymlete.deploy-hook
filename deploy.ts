@@ -115,28 +115,41 @@ serve({
     });
     persistStatusSnapshot();
 
-    const proc = Bun.spawnSync({
+    const proc = Bun.spawn({
       cmd: ["sh", "-c", `cd ${repo.path} && ${repo.cmd}`],
       stdout: "inherit",
       stderr: "inherit"
     });
 
-    const duration = Date.now() - start;
-    const next: RepoStatus = {
-      ...(statusByRepo.get(repoId) ?? {}),
-      lastExitCode: proc.exitCode ?? 1,
-      lastDurationMs: duration
-    };
+    proc.exited
+      .then((exitCode) => {
+        const duration = Date.now() - start;
+        const next: RepoStatus = {
+          ...(statusByRepo.get(repoId) ?? {}),
+          lastExitCode: exitCode ?? 1,
+          lastDurationMs: duration
+        };
 
-    if (proc.exitCode === 0) {
-      next.lastSuccess = new Date().toISOString();
-    } else {
-      next.lastError = "deploy failed";
-    }
+        if (exitCode === 0) {
+          next.lastSuccess = new Date().toISOString();
+        } else {
+          next.lastError = "deploy failed";
+        }
 
-    statusByRepo.set(repoId, next);
-    persistStatusSnapshot();
+        statusByRepo.set(repoId, next);
+        persistStatusSnapshot();
+      })
+      .catch(() => {
+        const duration = Date.now() - start;
+        statusByRepo.set(repoId, {
+          ...(statusByRepo.get(repoId) ?? {}),
+          lastExitCode: 1,
+          lastDurationMs: duration,
+          lastError: "deploy failed"
+        });
+        persistStatusSnapshot();
+      });
 
-    return proc.exitCode === 0 ? new Response("ok") : new Response("deploy failed", { status: 500 });
+    return new Response("accepted", { status: 202 });
   }
 });
