@@ -1,6 +1,6 @@
 import { serve } from "bun";
 import crypto from "crypto";
-import { readFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import config from "./deploy.config.json";
 
@@ -21,8 +21,33 @@ type RepoStatus = {
 
 const repos = config.repos as Record<string, Repo>;
 const statusByRepo = new Map<string, RepoStatus>();
+const statusFile = join(import.meta.dir, "status.json");
 
 const indexHtml = readFileSync(join(import.meta.dir, "public/index.html"), "utf8");
+
+function loadStatusSnapshot() {
+  if (!existsSync(statusFile)) return;
+  try {
+    const raw = readFileSync(statusFile, "utf8");
+    const parsed = JSON.parse(raw) as Record<string, RepoStatus>;
+    Object.entries(parsed).forEach(([id, status]) => {
+      if (id in repos) statusByRepo.set(id, status);
+    });
+  } catch {
+    // Ignore corrupted status file and start fresh.
+  }
+}
+
+function persistStatusSnapshot() {
+  const snapshot = Object.fromEntries(
+    Object.keys(repos).map((id) => [id, statusByRepo.get(id) ?? {}])
+  );
+  writeFileSync(statusFile, JSON.stringify(snapshot, null, 2));
+}
+
+loadStatusSnapshot();
+// Ensure added/removed repos are reflected in the persisted snapshot on boot.
+persistStatusSnapshot();
 
 function verifyGitHubSignature(signature: string | null, body: string, secret: string): boolean {
   if (!signature) return false;
@@ -88,6 +113,7 @@ serve({
       lastAttempt: new Date(start).toISOString(),
       lastError: undefined
     });
+    persistStatusSnapshot();
 
     const proc = Bun.spawnSync({
       cmd: ["sh", "-c", `cd ${repo.path} && ${repo.cmd}`],
@@ -109,6 +135,7 @@ serve({
     }
 
     statusByRepo.set(repoId, next);
+    persistStatusSnapshot();
 
     return proc.exitCode === 0 ? new Response("ok") : new Response("deploy failed", { status: 500 });
   }
