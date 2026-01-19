@@ -8,7 +8,7 @@ type Repo = {
   secret: string;
   path: string;
   cmd: string;
-  branch?: string; // default: main
+  branch?: string;
 };
 
 type RepoStatus = {
@@ -38,7 +38,6 @@ serve({
   async fetch(req) {
     const url = new URL(req.url);
 
-    /* -------------------- GET -------------------- */
     if (req.method === "GET") {
       if (url.pathname === "/" || url.pathname === "/index.html") {
         return new Response(indexHtml, {
@@ -56,7 +55,6 @@ serve({
       return new Response("not found", { status: 404 });
     }
 
-    /* -------------------- POST (DEPLOY) -------------------- */
     if (req.method !== "POST") {
       return new Response("method not allowed", { status: 405 });
     }
