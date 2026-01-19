@@ -2,7 +2,7 @@
     "repos": {
         "hackathon-api": {
             "secret": "YGnFFhbiaPQXnl1FvmyJl3rAwiaPi3s+dBcQMkV+y9lwe7yEoz013Mr3RDWV0qbm",
-            "path": "/repos/gymlete.api.hackathon",
+            "path": "/gymlete-docker/gymlete.api.hackathon",
             "cmd": "git pull && bun install && docker compose restart app"
         },
         "deploy-hook": {
