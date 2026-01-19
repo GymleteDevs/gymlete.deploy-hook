@@ -5,6 +5,7 @@ WORKDIR /app
 RUN apk add --no-cache git docker-cli docker-compose curl
 
 COPY deploy.ts deploy.config.json ./
+COPY public ./public
 
 EXPOSE 9061
 
