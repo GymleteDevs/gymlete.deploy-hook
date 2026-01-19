@@ -2,13 +2,13 @@
     "repos": {
         "hackathon-api": {
             "secret": "YGnFFhbiaPQXnl1FvmyJl3rAwiaPi3s+dBcQMkV+y9lwe7yEoz013Mr3RDWV0qbm",
-            "path": "/gymlete-docker/gymlete.api.hackathon",
-            "cmd": "git pull && bun install && docker compose restart app"
+            "path": "/repos/gymlete.api.hackathon",
+            "cmd": "git pull && bun install && docker-compose restart app"
         },
         "deploy-hook": {
             "secret": "F1JWRRx0vNhfvMqdniigjkJ2SeUBC2FEtwuzkQFG/56JjFaRLQUTeX4kMYUC7bNk",
-            "path": "/gymlete-docker/gymlete.deploy-hook",
-            "cmd": "git pull && bun install && docker compose build deploy-hook && docker compose up -d deploy-hook"
+            "path": "/repos/gymlete.deploy-hook",
+            "cmd": "git pull && bun install && docker-compose build deploy-hook && docker-compose up -d deploy-hook"
         }
     }
 }

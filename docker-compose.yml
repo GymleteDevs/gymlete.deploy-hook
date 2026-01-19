@@ -6,5 +6,5 @@ services:
     ports:
       - "9061:9061"
     volumes:
-      - /srv:/repos
+      - /home/ubuntu/gymlete-docker:/repos
       - /var/run/docker.sock:/var/run/docker.sock
