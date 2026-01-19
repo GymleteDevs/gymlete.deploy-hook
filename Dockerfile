@@ -6,6 +6,6 @@ RUN apk add --no-cache git docker-cli docker-compose curl
 
 COPY deploy.ts deploy.config.json ./
 
-EXPOSE 6061
+EXPOSE 9061
 
 CMD ["bun", "run", "deploy.ts"]

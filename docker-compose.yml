@@ -4,7 +4,7 @@ services:
     container_name: deploy-hook
     restart: unless-stopped
     ports:
-      - "6061:6061"
+      - "9061:9061"
     volumes:
       - /srv:/repos
       - /var/run/docker.sock:/var/run/docker.sock
