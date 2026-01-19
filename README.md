@@ -8,12 +8,6 @@ Small Bun service that receives GitHub webhooks and runs deploy commands for con
 - Runs the configured `cmd` for that repo
 - GET `/status.json` returns last deploy attempt info
 
-## Run locally (Bun)
-```bash
-bun install
-bun run deploy.ts
-```
-
 ## Run with PM2
 ```bash
 pm2 start ecosystem.config.js
