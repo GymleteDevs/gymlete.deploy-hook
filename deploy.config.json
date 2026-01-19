@@ -8,7 +8,7 @@
         "deploy-hook": {
             "secret": "F1JWRRx0vNhfvMqdniigjkJ2SeUBC2FEtwuzkQFG/56JjFaRLQUTeX4kMYUC7bNk",
             "path": "/home/ubuntu/gymlete-docker/gymlete.deploy-hook",
-            "cmd": "git pull && bun install && docker-compose build deploy-hook && docker-compose up -d deploy-hook"
+            "cmd": "git pull && bun install && pm2 restart all --namespace GYMLETE_DEPLOY_HOOK"
         }
     }
 }
